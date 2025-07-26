@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best Ultra Rare Book</title>
+</head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
+  html, body {
+    background: #202020;
+    color: #fff;
+    font-size: 1.1em;
+    font-family: 'fira mono', monospace;
+  }
+  body {
+    width: max-content;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  div > p {
+    display: inline;
+    margin: 0px;
+    font-family: 'fira mono', monospace;
+  }
+  div:not(.error) {
+    min-width: 60ch;
+    border-bottom: 1px solid #404040;
+    margin-top: 4px;
+  }
+  div > p:last-child {
+    float: right;
+  }
+  a {
+    text-decoration: none;
+  }
+  button {
+    display: block;
+    border: solid 4px currentColor;
+    background: none;
+    color: #07f;
+    margin-top: 40px;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 25px 50px;
+    font-family: 'fira mono', monospace;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
+  .error {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    max-width: 80%;
+  }
+</style>
+<script>
+// Get data and store in variables
+fetch('https://api.hypixel.net/v2/skyblock/bazaar')
+  .then(bzAPI => {
+    if (!bzAPI.ok) {
+      throw new Error(`Failed to fetch bazaar data from public Hypixel API (HTTP: ${bzAPI.status})`);
+    }
+    return bzAPI.json();
+  })
+  .then(bzData => {
+    const ultraBooks={"ENCHANTMENT_FIRST_STRIKE_5":{"name":"First Strike 5"},"ENCHANTMENT_LIFE_STEAL_5":{"name":"Life Steal 5"},"ENCHANTMENT_LOOTING_5":{"name":"Looting 5"},"ENCHANTMENT_TRIPLE-STRIKE_5":{"name":"Triple-Strike 5"},"ENCHANTMENT_CHANCE_5":{"name":"Chance 5"},"ENCHANTMENT_SYPHON_5":{"name":"Drain 5"},"ENCHANTMENT_PROSECUTE_6":{"name":"Prosecute 6"},"ENCHANTMENT_CLEAVE_6":{"name":"Cleave 6"},"ENCHANTMENT_EXECUTE_6":{"name":"Execute 6"},"ENCHANTMENT_THUNDERLORD_6":{"name":"Thunderlord 6"},"ENCHANTMENT_VENOMOUS_6":{"name":"Venomous 6"},"ENCHANTMENT_SHARPNESS_7":{"name":"Sharpness 7"},"ENCHANTMENT_PROTECTION_7":{"name":"Protection 7"},"ENCHANTMENT_PROJECTILE_PROTECTION_7":{"name":"Projectile Protection 7"},"ENCHANTMENT_POWER_7":{"name":"Power 7"},"ENCHANTMENT_BLAST_PROTECTION_7":{"name":"Blast Protection 7"},"ENCHANTMENT_FIRE_PROTECTION_7":{"name":"Fire Protection 7"},"ENCHANTMENT_GIANT_KILLER_7":{"name":"Giant Killer 7"},"ENCHANTMENT_GROWTH_7":{"name":"Growth 7"},"ENCHANTMENT_CUBISM_6":{"name":"Cubism 6"},"ENCHANTMENT_ENDER_SLAYER_7":{"name":"Ender Slayer 7"},"ENCHANTMENT_SMITE_7":{"name":"Smite 7"},"ENCHANTMENT_BANE_OF_ARTHROPODS_7":{"name":"Bane Of Arthropods 7"},"ENCHANTMENT_LUCK_7":{"name":"Luck 7"},"ENCHANTMENT_CRITICAL_7":{"name":"Critical 7"},"ENCHANTMENT_TITAN_KILLER_7":{"name":"Titan Killer 7"},"ENCHANTMENT_THUNDERBOLT_7":{"name":"Thunderbolt 7"},"GOLDEN_BOUNTY":{"name":"Golden Bounty"},"PESTHUNTING_GUIDE":{"name":"A Beginner's Guide to Pesthunting"}};
+    const bookValues = {};
+    const bookValuesSorted = {};
+
+    // Get the value of the books we care about
+    Object.keys(bzData.products).forEach(key => {
+      if (Object.keys(ultraBooks).includes(key)) {
+        bookValues[ultraBooks[key].name] = parseFloat(bzData.products[key].quick_status.buyPrice.toFixed(2));
+      }
+    });
+
+    // Sort the books by value
+    Object.keys(bookValues)
+      .sort((a, b) => bookValues[b] - bookValues[a])
+      .forEach(key => bookValuesSorted[key] = bookValues[key]);
+
+    // Create an element for each of the books' value in desc order
+    Object.keys(bookValuesSorted).forEach(book => {
+      const bookContainer = document.createElement('div');
+      const bookName = document.createElement('p');
+      const bookValue = document.createElement('p');
+      bookName.textContent = `${book}: `;
+      bookValue.textContent = Number(bookValuesSorted[book].toFixed(2)).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      bookContainer.appendChild(bookName);
+      bookContainer.appendChild(bookValue);
+      document.querySelector("body").appendChild(bookContainer);
+    });
+  })
+  .catch(error => {
+  console.error('Failed to fetch data from the API\n', error);
+  alert(`Failed to fetch data from API`);
+  let reloadButton = document.createElement('div');
+  reloadButton.classList = "error"
+  reloadButton.innerHTML = `${error}<a href=""><button>Reload Page</button></a>`
+  document.querySelector('body').appendChild(reloadButton)
+  });
+</script>
+<body>
+
+</body>
+</html>
