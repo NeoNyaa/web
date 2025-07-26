@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Ultra Rare Book</title>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <title>Best Ultra-Rare Book</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
   html, body {
     background: #202020;
     color: #fff;
-    font-size: 1.1em;
     font-family: 'fira mono', monospace;
   }
   body {
@@ -20,13 +20,13 @@
     transform: translateX(-50%);
   }
   div > p {
-    display: inline;
+    display: inline-block;
     margin: 0px;
     font-family: 'fira mono', monospace;
   }
   div:not(.error) {
-    min-width: 60ch;
-    border-bottom: 1px solid #404040;
+    min-width: 80ch;
+    border-bottom: 2px solid #404040;
     margin-top: 4px;
   }
   div > p:last-child {
@@ -87,11 +87,12 @@ fetch('https://api.hypixel.net/v2/skyblock/bazaar')
       .forEach(key => bookValuesSorted[key] = bookValues[key]);
 
     // Create an element for each of the books' value in desc order
+    document.querySelector("body").innerText = ""
     Object.keys(bookValuesSorted).forEach(book => {
       const bookContainer = document.createElement('div');
       const bookName = document.createElement('p');
       const bookValue = document.createElement('p');
-      bookName.textContent = `${book}: `;
+      bookName.textContent = `${book}`;
       bookValue.textContent = Number(bookValuesSorted[book].toFixed(2)).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       bookContainer.appendChild(bookName);
       bookContainer.appendChild(bookValue);
